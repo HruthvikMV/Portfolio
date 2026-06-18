@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hruthvik MV — Java Backend Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:       #0a0d14;
+      --bg2:      #111520;
+      --bg3:      #181d2c;
+      --border:   #1f2740;
+      --accent:   #6c63ff;
+      --accent2:  #c850c0;
+      --accent3:  #f7c948;
+      --text:     #e4e8f0;
+      --muted:    #7a82a0;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'Space Grotesk', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10, 13, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo span { color: var(--accent2); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .hero-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 2rem 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .name-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-role {
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-top: 6px;
+      color: var(--accent3);
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: var(--sans);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.88; text-decoration: none; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+
+    .stats-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 2.5rem;
+    }
+
+    .skills-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .skill-group {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .skill-group-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .skill-list li {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: var(--mono);
+    }
+
+    .exp-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 0.25rem;
+    }
+
+    .exp-company { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+
+    .exp-date {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 10px;
+    }
+
+    .exp-role { font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 1.25rem; }
+
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .exp-bullets li {
+      font-size: 14px;
+      color: var(--muted);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .exp-bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+      top: 3px;
+    }
+
+    .projects-grid { display: grid; gap: 1.25rem; }
+
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+
+    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .project-name { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+
+    .project-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 10px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .project-link:hover { background: rgba(108,99,255,0.12); text-decoration: none; }
+
+    .project-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+
+    .project-points { list-style: none; margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 6px; }
+
+    .project-points li {
+      font-size: 13px;
+      color: var(--muted);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.55;
+    }
+
+    .project-points li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent2);
+      font-size: 11px;
+      top: 3px;
+    }
+
+    .stack-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .stack-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 9px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .edu-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .edu-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .edu-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .edu-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    .contact-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .contact-tagline { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+
+    .contact-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .contact-item:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1.25rem; }
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px; left: 0; right: 0;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        gap: 0;
+        padding: 0.5rem 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 0.75rem 1.5rem; display: block; }
+      .hero { padding: 90px 1.25rem 3rem; }
+      .section { padding: 3.5rem 1.25rem; }
+      .exp-card { padding: 1.25rem 1.25rem 1.25rem 1.5rem; }
+      .project-card { padding: 1.25rem 1.25rem 1.25rem 1.5rem; }
+      .contact-wrap { padding: 1.75rem 1.25rem; }
+      .stats-row { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <nav>
+    <div class="nav-logo">hruthvik<span>.mv</span></div>
+    <button class="hamburger" aria-label="Toggle menu" onclick="this.nextElementSibling.classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="about">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Based in Bengaluru, India</div>
+      <h1>
+        Hi, I'm<br>
+        <span class="name-accent">Hruthvik MV</span>
+      </h1>
+      <div class="hero-role">
+        <span class="tag">Java</span>
+        <span class="tag">Spring Boot</span>
+        <span class="tag">Microservices</span>
+        <span class="tag">AWS</span>
+      </div>
+      <p class="hero-desc">
+        Java Backend Developer building production-ready microservices and RESTful APIs.
+        I work with Spring Boot, Spring Cloud, Spring Security, Kafka, Docker, Jenkins, and AWS
+        to ship scalable, well-tested distributed systems.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="mailto:hruthvikhruthu05@gmail.com" class="btn btn-outline">Get in touch</a>
+        <a href="https://github.com/HruthvikMV" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-num">10+</span>
+          <div class="stat-lbl">REST APIs built</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">75%+</span>
+          <div class="stat-lbl">Test coverage</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">6</span>
+          <div class="stat-lbl">Microservices</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">7.5</span>
+          <div class="stat-lbl">CGPA · VTU</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="skills">
+    <div class="section-label">// skill tree</div>
+    <h2 class="section-title">Technologies I work with</h2>
+    <div class="skills-groups">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages & Backend</div>
+        <ul class="skill-list">
+          <li>Java 8+</li><li>Spring Boot</li><li>Spring Cloud</li><li>Spring Security</li>
+          <li>JWT</li><li>Microservices</li><li>REST API</li><li>MVC</li>
+          <li>JPA/Hibernate</li><li>Kafka</li><li>Maven</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Database</div>
+        <ul class="skill-list">
+          <li>MySQL</li><li>Schema Design</li><li>Indexing</li><li>Joins</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">DevOps & Cloud</div>
+        <ul class="skill-list">
+          <li>Docker</li><li>Jenkins</li><li>AWS EC2</li><li>AWS S3</li>
+          <li>AWS RDS</li><li>AWS IAM</li><li>CloudWatch</li><li>ELB</li>
+          <li>Linux</li><li>Terraform</li><li>Ansible</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Testing & Tools</div>
+        <ul class="skill-list">
+          <li>JUnit</li><li>Mockito</li><li>JaCoCo</li><li>Postman</li>
+          <li>Git</li><li>GitHub</li><li>IntelliJ</li><li>Jira</li><li>Agile/Scrum</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="experience">
+    <div class="section-label">// work experience</div>
+    <h2 class="section-title">Where I've worked</h2>
+    <div class="exp-card">
+      <div class="exp-header">
+        <div class="exp-company">PSA Infotech</div>
+        <div class="exp-date">Jul 2025 – May 2026 · Bengaluru</div>
+      </div>
+      <div class="exp-role">Java Backend Developer Intern</div>
+      <ul class="exp-bullets">
+        <li>Developed 10+ RESTful APIs using Spring Boot, Spring Cloud (Eureka, Feign, API Gateway), and MVC architecture across microservices.</li>
+        <li>Secured APIs with JWT-based authentication and role-based access control using Spring Security.</li>
+        <li>Achieved 75%+ test coverage across core services using JUnit, Mockito, and JaCoCo.</li>
+        <li>Automated CI/CD pipelines using Jenkins and Docker, with deployment on AWS (EC2, RDS, CloudWatch).</li>
+        <li>Implemented asynchronous messaging using Kafka for event-driven, decoupled service communication.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="projects">
+    <div class="section-label">// projects</div>
+    <h2 class="section-title">Things I've built</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-name">Doctor Appointment Microservices Platform</div>
+          <a href="https://github.com/HruthvikMV/Docter-Appointment-App" target="_blank" rel="noopener" class="project-link">GitHub ↗</a>
+        </div>
+        <p class="project-desc">A full-featured microservices system for managing doctor appointments, built from scratch with 6 independent services.</p>
+        <ul class="project-points">
+          <li>Architected 6 independent services — doctor, patient, booking, payment, auth, and API Gateway — using Spring Boot and Java 17.</li>
+          <li>Implemented secure authentication via a dedicated Auth Service with Spring Security, JWT, and RBAC integrated with Spring Cloud Gateway.</li>
+          <li>Designed RESTful APIs with inter-service communication via OpenFeign, with per-service MySQL databases managed through JPA/Hibernate.</li>
+          <li>Enabled service discovery using Eureka and structured health tracking via Admin Server logging.</li>
+        </ul>
+        <div class="stack-pills">
+          <span class="stack-pill">Java 17</span>
+          <span class="stack-pill">Spring Boot</span>
+          <span class="stack-pill">Spring Cloud</span>
+          <span class="stack-pill">Spring Security</span>
+          <span class="stack-pill">JWT</span>
+          <span class="stack-pill">MySQL</span>
+          <span class="stack-pill">Hibernate</span>
+          <span class="stack-pill">OpenFeign</span>
+          <span class="stack-pill">Eureka</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="education">
+    <div class="section-label">// education & certs</div>
+    <h2 class="section-title">Qualifications</h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-title">Bachelor of Engineering</div>
+          <div class="edu-sub">VTU · 2021 – 2025<br>CGPA: 7.5 / 10</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">📜</div>
+        <div>
+          <div class="edu-title">Java Data Structures & Algorithms</div>
+          <div class="edu-sub">LinkedIn Learning</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">📜</div>
+        <div>
+          <div class="edu-title">Java Backend Development</div>
+          <div class="edu-sub">LinkedIn Learning</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="contact">
+    <div class="contact-wrap">
+      <div class="section-label" style="margin-bottom:0.5rem;">// contact</div>
+      <div class="contact-tagline">Ready to build something great?</div>
+      <p class="contact-sub">Open to full-time Java backend roles, internship opportunities, and open-source collaborations.</p>
+      <div class="contact-links">
+        <a href="mailto:hruthvikhruthu05@gmail.com" class="contact-item">✉ hruthvikhruthu05@gmail.com</a>
+        <a href="tel:7349188532" class="contact-item">📞 +91 73491 88532</a>
+        <a href="https://www.linkedin.com/in/hruthvik-mv" target="_blank" rel="noopener" class="contact-item">in LinkedIn</a>
+        <a href="https://github.com/HruthvikMV" target="_blank" rel="noopener" class="contact-item">⌥ GitHub</a>
+      </div>
+      <a href="mailto:hruthvikhruthu05@gmail.com" class="btn btn-primary" style="font-size:15px; padding:14px 32px;">Say Hello →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Designed &amp; built by Hruthvik MV · Bengaluru, India</p>
+  </footer>
+
+</body>
+</html>
